@@ -1,31 +1,43 @@
 #include <Servo.h>
 
-Servo myServo;
-const int buttonPin = 2;     // Pin connected to button
-int buttonState = HIGH;      // Current button state
-int lastButtonState = HIGH;  // Previous button state
-bool movedTo90 = false;      // Track servo position state
+Servo myservo;
+int pos = 0;
+bool servoAttached = false;
 
 void setup() {
-  myServo.attach(9);
-  pinMode(buttonPin, INPUT_PULLUP);  // Enable internal pull-up resistor
-  myServo.write(0);                  // Start servo at 0 degrees
+  Serial.begin(9600);
+  Serial.println("Send 'go' to move servo.");
 }
 
 void loop() {
-  buttonState = digitalRead(buttonPin);
+  if (Serial.available() > 0) {
+    String command = Serial.readStringUntil('\n');
+    command.trim();
 
-  // Check for button press (transition from HIGH to LOW)
-  if (lastButtonState == HIGH && buttonState == LOW) {
-    if (!movedTo90) {
-      myServo.write(90);    // Move servo to 90 degrees on button press
-      movedTo90 = true;
-    } else {
-      myServo.write(0);     // Move servo back to 0 degrees on next press
-      movedTo90 = false;
+    if (command == "go") {
+      if (!servoAttached) {
+        myservo.attach(10); // attach only when needed
+        servoAttached = true;
+      }
+
+      // move from 0 to 60
+      for (pos = 0; pos <= 60; pos++) {
+        myservo.write(pos);
+        delay(15);
+      }
+
+      delay(500); // small pause
+
+      // move back from 60 to 0
+      for (pos = 60; pos >= 0; pos--) {
+        myservo.write(pos);
+        delay(15);
+      }
+
+      myservo.detach(); // detach to stop buzzing
+      servoAttached = false;
+
+      Serial.println("Servo movement complete.");
     }
   }
-
-  lastButtonState = buttonState; // Save state for next loop
-  delay(50);  // Simple debounce delay
 }
