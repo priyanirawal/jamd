@@ -21,15 +21,15 @@ void loop() {
       }
 
       // move from 0 to 60
-      for (pos = 0; pos <= 60; pos++) {
+      for (pos = 40; pos <= 60; pos++) {
         myservo.write(pos);
         delay(15);
       }
 
-      delay(500); // small pause
+      delay(1500); // small pause
 
       // move back from 60 to 0
-      for (pos = 60; pos >= 0; pos--) {
+      for (pos = 60; pos >= 40; pos--) {
         myservo.write(pos);
         delay(15);
       }
