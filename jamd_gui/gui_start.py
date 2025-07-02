@@ -34,11 +34,6 @@ class DroneControlGUI:
         tk.Button(control_frame, text="Land", command=self.land).grid(row=0, column=1, padx=5)
         tk.Button(control_frame, text="Return", command=self.return_home).grid(row=0, column=2, padx=5)
 
-        # Telemetry
-        tk.Label(self.root, text="Telemetry", font=('Arial', 16, 'bold')).pack(pady=(15, 0))
-        self.telemetry_text = tk.Text(self.root, height=6, width=50)
-        self.telemetry_text.pack()
-
         # Camera Feed
         tk.Label(self.root, text="Live Camera Feed", font=('Arial', 16, 'bold')).pack(pady=(15, 0))
         self.video_label = tk.Label(self.root)
