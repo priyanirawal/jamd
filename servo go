@@ -1,0 +1,43 @@
+#include <Servo.h>
+
+Servo myservo;
+int pos = 0;
+bool servoAttached = false;
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("Send 'go' to move servo.");
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    String command = Serial.readStringUntil('\n');
+    command.trim();
+
+    if (command == "go") {
+      if (!servoAttached) {
+        myservo.attach(10); // attach only when needed
+        servoAttached = true;
+      }
+
+      // move from 0 to 90
+      for (pos = 0; pos <= 90; pos++) {
+        myservo.write(pos);
+        delay(15);
+      }
+
+      delay(1500); // small pause
+
+      // move back from 90 to 0
+      for (pos = 90; pos >= 0; pos--) {
+        myservo.write(pos);
+        delay(15);
+      }
+
+      myservo.detach(); // detach to stop buzzing
+      servoAttached = false;
+
+      Serial.println("Servo movement complete.");
+    }
+  }
+}
